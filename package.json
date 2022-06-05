@@ -4,15 +4,17 @@
   "description": "nodejs project",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1" , 
-    "start" : "nodemon app.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "author": "Charchit Gupta",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.6.0",
     "mongoose": "^6.3.5",
     "nodemon": "^2.0.16"
   }

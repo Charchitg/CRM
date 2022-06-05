@@ -13,9 +13,12 @@ const admin_schema = new mongoose.Schema({
         required : true , 
         type : String
     } , 
-    customers : {
-        type : mongoose.Schema.Types.Array
-    }  
+    customers : [
+        {
+            type : mongoose.Schema.Types.ObjectId , 
+            ref : 'customer'
+        } , 
+    ]  
 },{
     timestamps:true
 });
