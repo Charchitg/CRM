@@ -12,11 +12,11 @@ const admin_schema = new mongoose.Schema({
     password : {
         required : true , 
         type : String
-    } , 
+    }, 
     customers : [
         {
             type : mongoose.Schema.Types.ObjectId , 
-            ref : 'customer'
+            ref : 'customer' 
         } , 
     ]  
 },{

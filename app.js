@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 const admin_routes = require('./Routes/Admin');
-app.set('/',admin_routes);
+app.use('/',admin_routes);
 
 
 const mongoose = require('mongoose');
@@ -13,11 +13,16 @@ const mongoose = require('mongoose');
 mongoose.connect(
     process.env.MONGODB_URI , {
     useNewUrlParser: true,
-    useFindAndModify: false,
     useUnifiedTopology: true
   } , 
-    () => {
-        console.log("db connected");
+    (err) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("db connected");
+        }
+        
     }
 )
 
