@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400&family=Poppins:wght400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* background-color: var(--jasmine); */
+}
+:root{
+    /*  colour vars  */
+    --rich-black-fogra-39: #050505ff;
+--blue-ryb: #004fffff;
+--maximum-blue: #31afd4ff;
+--rose: #ff007fff;
+/**/
+--rich-black-fogra-29: #011627ff;
+--baby-powder: #fdfffcff;
+--tiffany-blue: #2ec4b6ff;
+--rose-madder: #bf0603;
+--orange-peel: #ff9f1cff;
+
+/*  font vars   */
+--poppins : 'Poppins' , sans-serif;
+--roboto : 'Roboto', sans-serif;
+--nunito : 'Nunito', sans-serif;
+ }
+footer{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    min-height: 10vh;
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--rich-black-fogra-39);
+}
+
+.creator_msg span {
+    font-family: var(--poppins);
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--rich-black-fogra-39);
+    text-decoration: none;
+}
+
+.logo a i{
+    color: var(--rich-black-fogra-39);
+    padding: 1rem;
+    outline: none;
+}
+
+.logo a i:hover{
+    color: var(--rose-madder);
+}
+
+.logo a i:active{
+    outline: none;
+}
