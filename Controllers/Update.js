@@ -28,12 +28,17 @@ exports.UpdateCustomer = async(req,res,next) => {
                 }
             }
             if(errors.length === 0){
-                existing.name = name;
-                existing.contact_num=contact_num;
-                existing.address=address;
-                existing.email=email;
-                
-                const saved  = await existing.save();
+                // existing.name = name;
+                // existing.contact_num=contact_num;
+                // existing.address=address;
+                // existing.email=email;
+                const updated = {
+                    name : name  , 
+                    contact_num : contact_num , 
+                    address : address , 
+                    email : email
+                }
+                const saved  = await customer.findOneAndUpdate({_id : customer_id} , updated );
     
                 console.log(saved);
     
