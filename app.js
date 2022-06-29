@@ -1,8 +1,17 @@
 require('dotenv').config();
 const express =require('express');
 const app = express();
+const path = require('path')
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
+app.set('view engine' , 'ejs');
+
+
 
 const admin_routes = require('./Routes/Admin');
 app.use('/',admin_routes);
