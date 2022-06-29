@@ -1,11 +1,17 @@
 const bcryptjs = require('bcryptjs');
 const admin = require('../Models/Admin');
+const jwt = require('jsonwebtoken')
+
+exports.getLogin = async (req , res, next) => {
+    res.render('./Login');
+}
+
 
 exports.Login = async(req,res,next) => {
     try {
         const email = (req.body.email ? req.body.email  : "");
         const password = (req.body.password ? req.body.password : "");
-
+        //console.log(req.body);
         let errors=[];
         if(email.length !== 0){
             let ans = email.toLowerCase().match(
@@ -28,11 +34,19 @@ exports.Login = async(req,res,next) => {
             let hash = existing.password;
             const result = await bcryptjs.compare(password,hash);
             if(result){
-                req.user = existing;
-                console.log(req.user);
-                res.status(201).json({
-                    message : "Admin logged in" 
-                })
+                const token = await jwt.sign({
+                    id:existing._id 
+                } , process.env.ACCESS_TOKEN_SECRET , {
+                    expiresIn:"1d"
+                });
+                res.cookie("accesstoken", token, {
+                    expires: (new Date(Date.now() + 86400 * 1000)),
+                    httpOnly: true
+                });
+                res.redirect('/add');
+                // res.status(201).json({
+                //     message : "Admin logged in" 
+                // })
             }
             else{
                 res.status(401).json({

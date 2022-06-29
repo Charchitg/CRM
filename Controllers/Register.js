@@ -1,13 +1,19 @@
 const admin = require('../Models/Admin');
+const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs')
+
+exports.getRegister = async(req,res,next) => {
+    res.render('./Register');
+}
 
 exports.Register = async(req,res,next) => {
     try {
+        //console.log(req.body);
         const name = (req.body.name ? req.body.name : "");
         const email = (req.body.email ? req.body.email  : "");
         const password = (req.body.password ? req.body.password : "");
         const confirm = (req.body.confirm ? req.body.confirm : "");
-
+        //console.log(name , email , password , email);
         let errors=[];
         if(name.length < 5){
             errors.push("Too short name");
@@ -29,17 +35,30 @@ exports.Register = async(req,res,next) => {
         }
 
         if(errors.length === 0){
+            
             console.log("no data error");
             let salt =await bcryptjs.genSalt(10);
             let hash = await bcryptjs.hash(password,salt);
             const newadmin = new admin({name,email,password : hash});
-            const saved = await newadmin.save();
 
-            res.status(201).json({
-                message:"admin login  successfully" , 
-                data : saved ,
-                errors : []
+            const token = await jwt.sign({
+                id:newadmin._id 
+            } , process.env.ACCESS_TOKEN_SECRET , {
+                expiresIn:"1d"
             });
+            res.cookie("accesstoken", token, {
+                expires: (new Date(Date.now() + 86400 * 1000)),
+                httpOnly: true
+            });
+            
+            const saved = await newadmin.save();
+            
+            res.redirect('/login');
+            // res.status(201).json({
+            //     message:"admin login  successfully" , 
+            //     data : saved ,
+            //     errors : []
+            // });
         }
         else{
             res.status(400).json({
