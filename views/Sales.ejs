@@ -2,19 +2,19 @@
 
         <div
             style="margin: 1rem;width: 60%; height:auto; padding:2rem; display:flex;margin:auto;justify-content: center;">
-            <span class="navbar-brand h1">Admin Dashboard</span>
+            <span class="navbar-brand h1"><%= page_title %> </span>
         </div>
-        <ul class="nav nav-pills nav-fill dashboardnav">
+        <!-- <ul class="nav nav-pills nav-fill dashboardnav">
             <li class="nav-item">
               <a class="nav-link " style="color:  #050505ff;" href="#">All Customer</a>
             </li>
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link active bg-danger"  href="#">Based on Most Visits</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" style="color:  #050505ff;" href="#">Based on Amount Spend</a>
-            </li> -->
-          </ul>
+            </li>
+          </ul> -->
 
         <table class="table table-hover">
             <thead>
@@ -22,24 +22,28 @@
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Contact num</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Address</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Paid</th>
+                    <th scope="col">Date</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-              <% for( let index = 0; index < admin_data.length; index++ ) { %>
+              <% for( let index = 0; index < data.length; index++ ) { %>
                 <tr>
                   <th scope="row"><%= index+1 %> </th>
-                  <td><%= admin_data[index].name %> </td>
-                  <td><%= admin_data[index].contact_num %> </td>
-                  <td><%= admin_data[index].email %> </td>
-                  <td><%= admin_data[index].address %> </td>
-                  <td><a href="./update/<%= admin_data[index]._id %> " id="action"><button class="edit"><i
+                  <td><%= data[index].name %> </td>
+                  <td><%= data[index].contact_num %> </td>
+                  <td><%= data[index].amount %> </td>
+                  <td><%= data[index].paid %> </td>
+                  <td><%= data[index].date %> </td>
+                  <td><a href="/update_sale/<%= data[index].customer_id %>/<%= data[index]._id %>  " id="action"><button class="edit"><i
                                   class="fas fa-edit"></i></button></a></td>
-                  <td><a href="./delete/<%= admin_data[index]._id %> " id="action"><button class="delete"><i
+                  <td><a href="/delete_sale/<%= data[index]._id %> " id="action"><button class="delete"><i
                                   class="fas fa-trash-alt"></i></button></a></td>
-                  <td><a href="./sales/<%= admin_data[index]._id %> ">All Sales</a></td>
+                  <% if (page_title=="All Sales") { %>
+                    <td><a href="./sales/<%= data[index].customer_id %> ">Customer's Sales</a></td>
+                  <% } %>
               </tr>
               <% } %>
                 

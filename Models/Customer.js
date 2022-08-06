@@ -21,7 +21,7 @@ const customer_schema = new mongoose.Schema({
     } , 
     visit_cnt : {
         type : Number , 
-        default : 1
+        default : 0
     } , 
     amount_spend : {
         type : Number ,

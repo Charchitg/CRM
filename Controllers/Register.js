@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs')
 
 exports.getRegister = async(req,res,next) => {
-    res.render('./Register');
+    res.render('./Register',{
+        page_title : "Register" , 
+        path : "./register"
+    });
 }
 
 exports.Register = async(req,res,next) => {
@@ -22,8 +25,7 @@ exports.Register = async(req,res,next) => {
             let ans = email.toLowerCase().match(
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
-            let exist = !ans;
-            if (exist) {
+            if (ans===false) {
                 errors.push("Given email is invalid");
             }
         }
@@ -34,6 +36,12 @@ exports.Register = async(req,res,next) => {
             errors.push("Confirm password does not match");
         }
 
+        const email_exist = await admin.findOne({email : email});
+        
+        if(email_exist!== null){
+            errors.push("user already exist with this email id");
+        }
+
         if(errors.length === 0){
             
             console.log("no data error");
@@ -41,15 +49,15 @@ exports.Register = async(req,res,next) => {
             let hash = await bcryptjs.hash(password,salt);
             const newadmin = new admin({name,email,password : hash});
 
-            const token = await jwt.sign({
-                id:newadmin._id 
-            } , process.env.ACCESS_TOKEN_SECRET , {
-                expiresIn:"1d"
-            });
-            res.cookie("accesstoken", token, {
-                expires: (new Date(Date.now() + 86400 * 1000)),
-                httpOnly: true
-            });
+            // const token = await jwt.sign({
+            //     id:newadmin._id 
+            // } , process.env.ACCESS_TOKEN_SECRET , {
+            //     expiresIn:"1d"
+            // });
+            // res.cookie("accesstoken", token, {
+            //     expires: (new Date(Date.now() + 86400 * 1000)),
+            //     httpOnly: true
+            // });
             
             const saved = await newadmin.save();
             
@@ -61,11 +69,16 @@ exports.Register = async(req,res,next) => {
             // });
         }
         else{
-            res.status(400).json({
-                message : "Please resolve the errors and retry" , 
-                data : null ,
-                errors : errors
+            console.log(errors);
+            res.render('./Register' , {
+                page_title : "Register" , 
+                path : "./register"
             });
+            // res.status(400).json({
+            //     message : "Please resolve the errors and retry" , 
+            //     data : null ,
+            //     errors : errors
+            // });
         }
     } catch (error) {
         console.log(error)

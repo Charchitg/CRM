@@ -3,7 +3,10 @@ const admin = require('../Models/Admin');
 const jwt = require('jsonwebtoken')
 
 exports.getLogin = async (req , res, next) => {
-    res.render('./Login');
+    res.render('./Login' , {
+        page_title : "Login" , 
+        path : "./login"
+    });
 }
 
 
@@ -26,11 +29,11 @@ exports.Login = async(req,res,next) => {
             errors.push("too short password , must be greater or equal to 8 character");
         }
         let existing = await admin.findOne({email : email});
-        if(existing==null){
+        if(existing===null){
             errors.push("no admin exist with this email address");
         }
         if(errors.length === 0){
-            console.log("no data error");
+            //console.log("no data error");
             let hash = existing.password;
             const result = await bcryptjs.compare(password,hash);
             if(result){
@@ -43,23 +46,33 @@ exports.Login = async(req,res,next) => {
                     expires: (new Date(Date.now() + 86400 * 1000)),
                     httpOnly: true
                 });
-                res.redirect('/add');
+                res.redirect('/dashboard');
                 // res.status(201).json({
                 //     message : "Admin logged in" 
                 // })
             }
             else{
-                res.status(401).json({
-                    message : "wrong email id or password"
+                console.log("invalid password");
+                res.render('./Login' , {
+                    page_title : "Login" , 
+                    path : "./login"
                 });
+                // res.status(401).json({
+                //     message : "wrong email id or password"
+                // });
             }
         }
         else{
-            res.status(400).json({
-                message : "Please resolve the errors and retry" , 
-                data : null ,
-                errors : errors
+            console.log(errors);
+            res.render('./Login' , {
+                page_title : "Login" , 
+                path : "./login"
             });
+            // res.status(400).json({
+            //     message : "Please resolve the errors and retry" , 
+            //     data : null ,
+            //     errors : errors
+            // });
         }
     } catch (error) {
         console.log(error)

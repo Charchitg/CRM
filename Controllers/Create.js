@@ -1,14 +1,16 @@
 const { ObjectId } = require("mongodb");
-const admin = require("../Models/Admin");
 const customer = require("../Models/Customer");
 
 exports.getAddCustomer = async(req,res,next) => {
-    res.render('./AddCustomer');
+    res.render('./AddCustomer' , {
+        page_title : "Add Customer" , 
+        path : "/add"
+    });
 }
 
 exports.AddCustomer = async (req,res,next) => {
     try {
-        console.log("in add customer ",req.user);
+       
         const name = (req.body.name ? req.body.name : "");
         const contact_num = (req.body.contact_num ? req.body.contact_num : "");
         const email = req.body.email || "";
@@ -32,19 +34,23 @@ exports.AddCustomer = async (req,res,next) => {
 
         let existing = await customer.findOne({
             $or : [
-                {name : name} , {contact_num : contact_num} , {email : email}
+                 {contact_num : contact_num} , {email : email}
             ]
         });
         if(existing){
             errors.push("user already exist");
         }
+        let admin_id = req.user;
+        //console.log(admin_id , typeof(admin_id));
+        admin_id = ObjectId(admin_id);
+        //console.log(admin_id);
         if(errors.length === 0){
             let customer_obj = {
                 name
                 ,contact_num
                 ,email
                 ,address , 
-                admin_id : ObjectId(req.body.admin_id)
+                admin_id : admin_id
             }
             // if(amount !== 0 && paid !== null){
             //     const sale_obj = {
@@ -58,20 +64,25 @@ exports.AddCustomer = async (req,res,next) => {
             
             const saved  = await data.save();
             
-            console.log(saved);
-            
-            res.status(201).json({
-                message : "customer added" , 
-                data : saved , 
-                errors :[]
-            });
+          //  console.log(saved);
+            res.redirect('/DashBoard');
+            // res.status(201).json({
+            //     message : "customer added" , 
+            //     data : saved , 
+            //     errors :[]
+            // });
         }
         else{
-            res.status(401).json({
-                message : "invalid informations" , 
-                data : null , 
-                errors : errors
-            })
+            console.log(errors);
+            res.render('./AddCustomer' , {
+                page_title : "Add Customer" , 
+                path : "./add"
+            });
+            // res.status(401).json({
+            //     message : "invalid informations" , 
+            //     data : null , 
+            //     errors : errors
+            // })
         }
     } catch (error) {
         console.log(error)

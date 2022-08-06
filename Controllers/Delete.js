@@ -5,7 +5,7 @@ const sales = require("../Models/Sales");
 
 exports.DeleteCustomer = async (req, res, next) => {
     try {
-        let customer_id = req.body.customer_id;
+        let customer_id = req.params.customer_id;
         customer_id = ObjectId(customer_id);
         const existing = await customer.findOne({ _id: customer_id });
         if (existing) {
@@ -26,27 +26,32 @@ exports.DeleteCustomer = async (req, res, next) => {
             console.log("delete cnt =", deletecnt);
             console.log("sales_cnt" , sales_cnt);
             if (deletecnt.acknowledged && sales_cnt.acknowledged) {
-                res.status(201).json({
-                    message: "Customer and all sales related to it deleted successfully",
-                    errors: []
-                });
+                res.redirect('/dashboard');
+                // res.status(201).json({
+                //     message: "Customer and all sales related to it deleted successfully",
+                //     errors: []
+                // });
             }
             else {
                 // user.customers.push(customer_id);
                 // const save_admin = await user.save();
                 // console.log("admin after unsuccessful deletion ", save_admin);
-
-                res.status(400).json({
-                    message: "customer deletion unsuccessful",
-                    errors: []
-                });
+                console.log("problem in deletion");
+                // res.status(400).json({
+                //     message: "customer deletion unsuccessful",
+                //     errors: []
+                // });
             }
+
+            //res.render('/Dashboard');
         }
         else {
             // error user does not exist
-            res.status(404).json({
-                message: "Customer data not found"
-            });
+            console.log("no such customer exist");
+            res.redirect('/dashboard');
+            // res.status(404).json({
+            //     message: "Customer data not found"
+            // });
         }
     } catch (error) {
         console.log(error);

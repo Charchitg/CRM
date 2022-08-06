@@ -18,6 +18,14 @@ const sale_schema = new mongoose.Schema({
     customer_id : {
         type : mongoose.Schema.Types.ObjectId , 
         required : true
+    } , 
+    name : {
+        type : String , 
+        required : true
+    } , 
+    contact_num : {
+        type : String , 
+        required : true
     }  
 });
 

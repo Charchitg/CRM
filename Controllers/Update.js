@@ -1,17 +1,44 @@
 const { ObjectId } = require("mongodb");
 const customer = require("../Models/Customer");
 
+exports.getUpdateCustomer = async (req,res,next) =>{
+    try {
+        console.log(req.params);
+        console.log(req.query);
+        let customer_id = req.params.customer_id;
+        console.log(customer_id);
+        customer_id=ObjectId(customer_id);
+        let existing = await customer.findOne({_id : customer_id});
+        console.log(existing);
+        if(existing){
+            res.render('./UpdateCustomer' , {
+                page_title : "Update Customer" , 
+                path : "./update" , 
+                data : existing
+            });
+        }
+        else{
+            res.redirect('/dashboard');   
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(404).json({
+            message : "Bad request"
+        });
+    }
+}
+
 exports.UpdateCustomer = async(req,res,next) => {
     try {
-        let customer_id = req.body.customer_id;
+        let customer_id = req.params.customer_id;
         customer_id=ObjectId(customer_id);
         let existing = await customer.findOne({_id : customer_id});
     
         if(existing){
             const name = (req.body.name ? req.body.name : existing.name);
             const contact_num = (req.body.contact_num ? req.body.contact_num : existing.contact_num);
-            const email = req.body.email || existing.email;
-            const address = req.body.address || existing.address;
+            const email = (req.body.email ? req.body.email : existing.email);
+            const address = (req.body.address ? req.body.address : existing.address );
     
             let errors = [];
             if(contact_num.length !== 10){
@@ -38,17 +65,18 @@ exports.UpdateCustomer = async(req,res,next) => {
                     address : address , 
                     email : email
                 }
-                const saved  = await customer.findOneAndUpdate({_id : customer_id} , updated );
+                const saved  = await customer.findOneAndUpdate({_id : customer_id} , updated  , {new : true});
     
                 console.log(saved);
-    
-                res.status(201).json({
-                    message : "customer updated" , 
-                    data : saved , 
-                    errors :[]
-                })
+                res.redirect('/dashboard');
+                // res.status(201).json({
+                //     message : "customer updated" , 
+                //     data : saved , 
+                //     errors :[]
+                // })
             }
             else{
+        
                 res.status(401).json({
                     message : "invalid informations" , 
                     data : null , 
